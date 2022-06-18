@@ -17,6 +17,22 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
+
+        const userCollection = client.db('origin-cloud-technologies').collection('users');
+
+        app.post('/user', async (req, res) => {
+            const newUser= req.body;
+            const result = await userCollection.insertOne(newUser);
+            res.send(result);
+          });
+
+          app.get('/user/:email', async (req, res) => {
+            const mail = req.params.email;
+          const query = ({ email : mail });
+          const user = await userCollection.find(query).toArray();
+          res.send(user);
+          });
+
     }
     finally {
 
