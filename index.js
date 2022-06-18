@@ -19,6 +19,7 @@ async function run() {
         await client.connect();
 
         const userCollection = client.db('origin-cloud-technologies').collection('users');
+        const projectCollection = client.db('origin-cloud-technologies').collection('projects');
 
         app.post('/user', async (req, res) => {
             const newUser= req.body;
@@ -30,6 +31,20 @@ async function run() {
             const mail = req.params.email;
           const query = ({ email : mail });
           const user = await userCollection.find(query).toArray();
+          res.send(user);
+          });
+
+
+          app.post('/project', async (req, res) => {
+            const newProject= req.body;
+            const result = await projectCollection.insertOne(newProject);
+            res.send(result);
+          });
+
+          app.get('/project/:email', async (req, res) => {
+            const mail = req.params.email;
+          const query = ({ email : mail });
+          const user = await projectCollection.find(query).toArray();
           res.send(user);
           });
 
